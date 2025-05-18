@@ -1,85 +1,97 @@
 <!DOCTYPE html>
 <html lang="ja">
-    <head>
-        <meta charset="utf-8">
-        <title>演習課題4：自動販売機（クラス）</title>
-    </head>
-    <body>
-        <h1 id="vending-machine">自動販売機システム</h1>
-        <table id="item_area" border="1"></table>
-        <script>
-            // 商品一覧を記録する連想配列の配列
-            const items =  [
-                { id: 1, name: "緑茶", price: 140, stock: 5 },
-                { id: 2, name: "水", price: 100, stock: 14 },
-                { id: 3, name: "オレンジジュース", price: 150, stock: 7 },
-                { id: 4, name: "リンゴジュース", price: 150, stock: 9 },
-                { id: 5, name: "炭酸水", price: 120, stock: 1 },
-                { id: 6, name: "サイダー", price: 160, stock: 3 },
-                { id: 7, name: "コーヒー", price: 170, stock: 8 },
-                { id: 8, name: "紅茶", price: 140, stock: 6 }
-            ]
+<head>
+    <meta charset="utf-8">
+    <title>演習課題4：自動販売機（クラス）</title>
+</head>
+<body>
+    <h1 id="vending-machine">自動販売機システム</h1>
+    <table id="item_area" border="1"></table>
 
-            // 商品用のクラス定義
-            class Item {
-                static number = 1;
-                constructor(name, price, stock) {
-                    this.id = Item.number;
-                    this.name = name;
-                    this.price = price;
-                    this.stock = stock;
-                    Item.number++;
-                }
+    <script>
+        // 商品一覧を記録する連想配列の配列
+        const items = [
+            { id: 1, name: "緑茶", price: 140, stock: 5 },
+            { id: 2, name: "水", price: 100, stock: 14 },
+            { id: 3, name: "オレンジジュース", price: 150, stock: 7 },
+            { id: 4, name: "リンゴジュース", price: 150, stock: 9 },
+            { id: 5, name: "炭酸水", price: 120, stock: 1 },
+            { id: 6, name: "サイダー", price: 160, stock: 3 },
+            { id: 7, name: "コーヒー", price: 170, stock: 8 },
+            { id: 8, name: "紅茶", price: 140, stock: 6 }
+        ];
 
-                // 商品一覧の表示関数
-                static showItemList(list) {
-                    console.log("商品は以下の" + Item.number + "種類です。");
+        // 商品用のクラス定義
+        class Item {
+            static number = 1;
 
-                    // 配列の内容を項目毎に出力
-                    // 課題4-1. ここにコードを書く
-                    console.log(""); // 空行の出力
-                }
-                
-                // 商品購入の関数
-                buyItem() {          
-                    if (this.stock >= 1) { 
-                        console.log("商品番号: "+this.id+", 商品名: "+this.name+"を購入します。");
-                        // 課題4-2. ここにコードを書く
-                        // 購入による商品の在庫削減処理
-                        
-                        // 課題4-3. ここにコードを書く
-                        // 在庫用のエレメントを抽出し、HTML内の個数を更新
-                    } else console.log(this.name+"は商品の在庫がないため購入できません。");
-                }
-            } // End of Item class
-
-            // 商品テーブルのエレメント抽出
-            const itemArea = document.getElementById("item_area");
-            itemArea.innerHTML += "<tr><th>商品名</th><th>金額</th><th>在庫数</th><th>購入</th></tr>";
-
-            // 配列のオブジェクト作成
-            const item_list = new Array(items.length);
-            const btn = new Array(items.length);
-
-            // 課題4-1. ここにコード書く
-            // 商品オブジェクトの生成
-
-            // 課題4-2. ここにコードを書く
-            // 商品表の作成
-
-            // クリックイベント時の購入処理の設定
-            for (let i=0; i<item_list.length; i++) {
-                // 課題4-3. ここにコードを書く
-                // 課題4-1, 4-2のコードが完成したら、以下のコメントを外す
-                //document.getElementById("button"+item_list[i].id).onclick = () => {
-                //    item_list[i].buyItem();
-                //}
+            constructor(name, price, stock) {
+                this.id = Item.number;
+                this.name = name;
+                this.price = price;
+                this.stock = stock;
+                Item.number++;
             }
-            Item.showItemList(item_list);
 
-        </script>
-    </body>
+            // 商品一覧の表示関数
+            static showItemList(list) {
+                for (let i = 0; i < list.length; i++) {
+                    const item = list[i];
+                    console.log("商品番号: " + item.id + ", 商品名: " + item.name + ", 金額: " + item.price + ", 在庫数: " + item.stock);
+                }
+                console.log("商品は以下の" + (Item.number - 1) + "種類です。\n");
+            }
+
+            // 商品購入の関数
+            buyItem() {
+                if (this.stock >= 1) {
+                    console.log("商品番号: " + this.id + ", 商品名: " + this.name + "を購入します。");
+                    this.stock--;
+                    console.log("残りは" + this.stock + "個です。");
+
+                    // 在庫の表示更新
+                    const stockCell = document.getElementById("stock" + this.id);
+                    if (stockCell) stockCell.textContent = this.stock;
+                } else {
+                    console.log(this.name + "は商品の在庫がないため購入できません。");
+                }
+            }
+        }
+
+        // 商品テーブルのエレメント抽出
+        const itemArea = document.getElementById("item_area");
+        itemArea.innerHTML += "<tr><th>商品名</th><th>金額</th><th>在庫数</th><th>購入</th></tr>";
+
+        // 商品オブジェクトの生成
+        const item_list = new Array(items.length);
+        for (let i = 0; i < items.length; i++) {
+            item_list[i] = new Item(items[i].name, items[i].price, items[i].stock);
+        }
+
+        // 商品表の作成
+        for (let i = 0; i < item_list.length; i++) {
+            itemArea.innerHTML +=
+                "<tr>" +
+                "<td>" + item_list[i].name + "</td>" +
+                "<td>" + item_list[i].price + "</td>" +
+                `<td id="stock${item_list[i].id}">${item_list[i].stock}</td>` +
+                `<td><button id="button${item_list[i].id}">購入</button></td>` +
+                "</tr>";
+        }
+
+        // ボタンクリック時の処理設定
+        for (let i = 0; i < item_list.length; i++) {
+            document.getElementById("button" + item_list[i].id).onclick = () => {
+                item_list[i].buyItem();
+            }
+        }
+
+        // コンソールに商品情報を表示
+        Item.showItemList(item_list);
+    </script>
+</body>
 </html>
+
 <!-- 
 期待される出力例
 -----------------
